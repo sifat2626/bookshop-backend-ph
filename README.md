@@ -192,7 +192,7 @@ cd backend npm install
  ``` 
 Create a `.env` file in the backend directory and add the following environment variables: 
 ```bash
- MONGO_URI=your_mongo_db_connection_string PORT=5000 
+ DATABASE=your_mongo_db_connection_string PORT=5000 
  ``` 
 Start the backend server: 
 ```bash 
