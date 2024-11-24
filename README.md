@@ -54,4 +54,5 @@ Start the backend server:
 ```bash npm run dev ```
 The backend will run on `http://localhost:5000`. 
 ### 3. Access the APIs Use a tool like Postman or Insomnia to interact with the API endpoints at `http://localhost:5000/api/`. 
-## Contribution Feel free to fork the repository, create branches for your features, and submit pull requests. Contributions are always welcome!
+## Contribution:
+- Feel free to fork the repository, create branches for your features, and submit pull requests. Contributions are always welcome!
