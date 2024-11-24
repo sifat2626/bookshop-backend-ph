@@ -9,6 +9,9 @@ import hpp from "hpp";
 import mongoSanitize from "express-mongo-sanitize";
 import fs from "fs";
 import path from "path";
+import errorHandler from "./middlewares/errorHandler";
+import bookRoute from "./routes/book.route";
+import orderRoute from "./routes/order.route";
 
 dotenv.config();
 
@@ -36,11 +39,13 @@ app.use(mongoSanitize());
 // Routes middleware
 // fs.readdirSync(path.join(__dirname, "routes")).forEach((file) => {
 //     const route = require(`./routes/${file}`);
-//     app.use("/api/v1", route);
+//     app.use("/api", route);
 // });
+app.use("/api/products", bookRoute); // Mount the book routes under /api/v1
+app.use("/api/orders", orderRoute); // Mount the book routes under /api/v1
 
 
-
+app.use(errorHandler)
 
 export default  app;
 
