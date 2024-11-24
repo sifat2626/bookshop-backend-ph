@@ -1,7 +1,7 @@
-# book-ph -
-A Book Selling Platform book-ph is a full-featured book-selling platform built with Node.js, Express, and MongoDB. It allows users to manage books, place orders, and calculate total revenue, all through a set of APIs. The platform supports the management of book inventory, orders, and revenue calculations for administrators. 
-## Features - 
-**Product Management**: 
+# book-ph 
+- A Book Selling Platform book-ph is a full-featured book-selling platform built with Node.js, Express, and MongoDB. It allows users to manage books, place orders, and calculate total revenue, all through a set of APIs. The platform supports the management of book inventory, orders, and revenue calculations for administrators. 
+## Features 
+- **Product Management**: 
 - **Create a new product** (API: `POST /api/products`). 
 - **Get all products** or search for products by title, author, or category (API: `GET /api/products`). 
 - **Get a specific product by ID** (API: `GET /api/products/:id`). 
