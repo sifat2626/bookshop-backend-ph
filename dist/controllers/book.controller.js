@@ -88,20 +88,20 @@ const getBookById = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getBookById = getBookById;
-// Controller to update a book by ID
 const updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { productId } = req.params;
-        const { price, quantity } = req.body;
-        if (!price && !quantity) {
+        const updateData = req.body;
+        // Ensure at least one field is provided for the update
+        if (Object.keys(updateData).length === 0) {
             res.status(400).json({
-                message: "Price or quantity is required to update",
+                message: "At least one field is required to update",
                 status: false,
             });
             return;
         }
         // Call the service to update the book
-        const updatedBook = yield (0, book_service_1.updateBookService)(productId, { price, quantity });
+        const updatedBook = yield (0, book_service_1.updateBookService)(productId, updateData);
         if (!updatedBook) {
             res.status(404).json({
                 message: "Book not found",
@@ -118,7 +118,7 @@ const updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (error) {
-        next(error); // Pass error to the error handling middleware
+        next(error); // Pass error to the error-handling middleware
     }
 });
 exports.updateBook = updateBook;

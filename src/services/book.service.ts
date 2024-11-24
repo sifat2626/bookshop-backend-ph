@@ -52,7 +52,7 @@ export const getBookByIdService = async (productId: string): Promise<any> => {
 // Service to update a book by ID
 export const updateBookService = async (
     productId: string,
-    updateData: { price?: number, quantity?: number }
+    updateData: Partial<Record<keyof TBook, any>> // Allow updating any field
 ): Promise<any> => {
     // Find the book by ID and update the fields
     const updatedBook = await Book.findByIdAndUpdate(

@@ -58,7 +58,8 @@ const getBookByIdService = (productId) => __awaiter(void 0, void 0, void 0, func
 });
 exports.getBookByIdService = getBookByIdService;
 // Service to update a book by ID
-const updateBookService = (productId, updateData) => __awaiter(void 0, void 0, void 0, function* () {
+const updateBookService = (productId, updateData // Allow updating any field
+) => __awaiter(void 0, void 0, void 0, function* () {
     // Find the book by ID and update the fields
     const updatedBook = yield book_model_1.default.findByIdAndUpdate(productId, updateData, { new: true, runValidators: true } // Return the updated book and validate
     );

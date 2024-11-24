@@ -102,7 +102,6 @@ export const getBookById = async (
     }
 };
 
-// Controller to update a book by ID
 export const updateBook = async (
     req: Request,
     res: Response,
@@ -110,18 +109,19 @@ export const updateBook = async (
 ): Promise<void> => {
     try {
         const { productId } = req.params;
-        const { price, quantity } = req.body;
+        const updateData = req.body;
 
-        if (!price && !quantity) {
+        // Ensure at least one field is provided for the update
+        if (Object.keys(updateData).length === 0) {
             res.status(400).json({
-                message: "Price or quantity is required to update",
+                message: "At least one field is required to update",
                 status: false,
             });
             return;
         }
 
         // Call the service to update the book
-        const updatedBook = await updateBookService(productId, { price, quantity });
+        const updatedBook = await updateBookService(productId, updateData);
 
         if (!updatedBook) {
             res.status(404).json({
@@ -139,7 +139,7 @@ export const updateBook = async (
             data: updatedBook,
         });
     } catch (error) {
-        next(error); // Pass error to the error handling middleware
+        next(error); // Pass error to the error-handling middleware
     }
 };
 
