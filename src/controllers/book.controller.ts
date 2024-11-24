@@ -1,26 +1,33 @@
 import { Request, Response, NextFunction } from "express";
-import Book, {TBook} from "../models/book.model"; // Assuming you have a Book model
+import {
+    createBookService,
+    getAllBooksService,
+    getBookByIdService,
+    updateBookService,
+    deleteBookService,
+} from "../services/book.service";
+import {TBook} from "../models/book.model";
 
 // Controller to handle book creation
 export const createBook = async (
-    req: Request<{}, {}, TBook, {}>, // Request with TBook body type
+    req: Request<{}, {}, TBook, {}>,
     res: Response,
     next: NextFunction
-): Promise<void> => { // Controller should return `Promise<void>`
+): Promise<void> => {
     try {
         const { title, author, price, category, description, quantity, inStock } = req.body;
 
         // Validate required fields
         if (!title || !price || !category) {
-             res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "Title, price, and category are required",
             });
             return;
         }
 
-        // Create a new book
-        const book = new Book({
+        // Call the service to create a new book
+        const book = await createBookService({
             title,
             author,
             price,
@@ -29,9 +36,6 @@ export const createBook = async (
             quantity,
             inStock,
         });
-
-        // Save book to database
-        await book.save();
 
         // Send response
         res.status(201).json({
@@ -43,7 +47,6 @@ export const createBook = async (
     }
 };
 
-
 // Controller to get all books or books by a search term
 export const getAllBooks = async (
     req: Request,
@@ -53,21 +56,8 @@ export const getAllBooks = async (
     try {
         const searchTerm = req.query.searchTerm as string | undefined;
 
-        let query: any = {};
-
-        // If searchTerm is provided, find books based on title, author, or category
-        if (searchTerm) {
-            query = {
-                $or: [
-                    { title: { $regex: searchTerm, $options: "i" } },
-                    { author: { $regex: searchTerm, $options: "i" } },
-                    { category: { $regex: searchTerm, $options: "i" } }
-                ]
-            };
-        }
-
-        // Retrieve books from the database
-        const books = await Book.find(query);
+        // Call the service to get all books
+        const books = await getAllBooksService(searchTerm);
 
         // Return the response
         res.status(200).json({
@@ -87,12 +77,11 @@ export const getBookById = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const { productId } = req.params; // Get the productId from route parameters
+        const { productId } = req.params;
 
-        // Find the book by ID
-        const book = await Book.findById(productId);
+        // Call the service to get a book by ID
+        const book = await getBookByIdService(productId);
 
-        // If no book is found, return an error response
         if (!book) {
             res.status(404).json({
                 message: "Book not found",
@@ -120,10 +109,9 @@ export const updateBook = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const { productId } = req.params; // Get the productId from route parameters
-        const { price, quantity } = req.body; // Get the updated price and quantity from request body
+        const { productId } = req.params;
+        const { price, quantity } = req.body;
 
-        // Validate that at least one field to update is provided
         if (!price && !quantity) {
             res.status(400).json({
                 message: "Price or quantity is required to update",
@@ -132,15 +120,10 @@ export const updateBook = async (
             return;
         }
 
-        // Find the book by ID and update the fields
-        const book = await Book.findByIdAndUpdate(
-            productId,
-            { price, quantity }, // Fields to update
-            { new: true, runValidators: true } // Return the updated book and validate
-        );
+        // Call the service to update the book
+        const updatedBook = await updateBookService(productId, { price, quantity });
 
-        // If no book is found, return an error response
-        if (!book) {
+        if (!updatedBook) {
             res.status(404).json({
                 message: "Book not found",
                 status: false,
@@ -153,7 +136,7 @@ export const updateBook = async (
         res.status(200).json({
             message: "Book updated successfully",
             status: true,
-            data: book,
+            data: updatedBook,
         });
     } catch (error) {
         next(error); // Pass error to the error handling middleware
@@ -167,13 +150,12 @@ export const deleteBook = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const { productId } = req.params; // Get the productId from route parameters
+        const { productId } = req.params;
 
-        // Find and delete the book by ID
-        const book = await Book.findByIdAndDelete(productId);
+        // Call the service to delete the book
+        const deletedBook = await deleteBookService(productId);
 
-        // If no book is found, return an error response
-        if (!book) {
+        if (!deletedBook) {
             res.status(404).json({
                 message: "Book not found",
                 status: false,
